@@ -85,7 +85,9 @@ class CompactingHashMultiMapIndex : public TableIndex
         if (iter.isEnd()) {
             std::cout << "CompactingHashMultiMapIndex::deleteEntryDo: tuple data at end is "
                       << (tuple->m_data ? "not " : "")
-                      << "null.\n";
+                      << "null.\n"
+                      << debug()
+                      << "\n";
             if (tuple->m_data) {
                 std::cout << "  Tuple: " << tuple->debug() << "\n";
             }

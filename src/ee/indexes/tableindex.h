@@ -262,7 +262,7 @@ public:
     /**
      * Check that all data is well defined.
      */
-    virtual void debugAllData(const std::string &index_name) const;
+    virtual void debugAllData(const std::string &index_name, std::string label) const;
 
     /**
      * This method moves to the first tuple equal to given key.  To

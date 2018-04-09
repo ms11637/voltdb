@@ -238,9 +238,18 @@ private:
     std::vector<std::string> m_traces;
 };
 
-#define PRINT_STACK_TRACE() outputLogHeader(__FILE__, __LINE__, __FUNCTION__, VOLT_LEVEL_ALL); \
-        ::printf("STACK TRACE\n");voltdb::StackTrace::printStackTrace();::fflush(stdout)
+#define PRINT_LABELLED_STACK_TRACE(LABEL) do {\
+    outputLogHeader(__FILE__, __LINE__, __FUNCTION__, VOLT_LEVEL_ALL); \
+    if (strlen(LABEL) == 0) { \
+        ::printf("STACK TRACE"); \
+    } else {\
+        ::printf("STACK TRACE(%s)", LABEL); \
+    } \
+    voltdb::StackTrace::printStackTrace(); \
+    ::fflush(stdout); \
+} while(0)
 
+#define PRINT_STACK_TRACE() PRINT_LABELLED_STACK_TRACE("")
 } // namespace voltdb
 
 #endif // HSTOREDEBUGLOG_H

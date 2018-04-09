@@ -331,19 +331,19 @@ public:
     /**
      * Check that all the data in all indexes is well defined.
      */
-    void debugAllIndexData();
+    void debugAllIndexData(const std::string &label);
     /**
      * Check that all rows in this table which should
      * be in indexes are actually in the indexes.
      */
-    void debugAllIndexes();
+    void debugAllIndexes(const std::string &label);
     /**
      * Check that a given row in this table which should
      * be in an index is actually in all the indexes.
      *
      * @param tuple The tuple to check.
      */
-    void debugAllIndexesOneTuple(const TableTuple &tuple);
+    void debugAllIndexesOneTuple(const TableTuple &tuple, const std::string &label);
 
     /// This is not used in any production code path -- it is a convenient wrapper used by tests.
     bool updateTuple(TableTuple& targetTupleToUpdate, TableTuple& sourceTupleWithNewValues) {

@@ -434,14 +434,16 @@ public:
         m_cmp(keySchema)
     {}
 
-    void debugAllData(const std::string &index_name) const {
-        int pos = 0;
-        std::cout << "CompactingTreeMultiMapIndex::debugAllData("
+    void debugAllData(const std::string &index_name, std::string label) const {
+        std::cout << "Label: "
+                  << label
+                  << ": CompactingTreeMultiMapIndex::debugAllData("
                   << index_name
                   << ") start with "
                   << getSize()
                   << " entries."
                   << std::endl;
+        int pos = 0;
         for (auto iter = m_entries.begin(); !iter.isEnd();) {
             TableTuple retval(getTupleSchema());
             retval.move(const_cast<void*>(iter.value()));
@@ -451,13 +453,15 @@ public:
                           << " at position "
                           << pos << "."
                           << std::endl;
-                PRINT_STACK_TRACE();
+                PRINT_LABELLED_STACK_TRACE(label.c_str());
             }
             iter.moveNext();
             pos += 1;
         }
         std::cout << "CompactingTreeMultiMapIndex::debugAllData("
                   << index_name
+                  << ", "
+                  << label
                   << ") end.\n";
     }
 };

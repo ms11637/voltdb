@@ -242,6 +242,7 @@ PersistentTable::~PersistentTable() {
 // OPERATIONS
 // ------------------------------------------------------------------
 void PersistentTable::nextFreeTuple(TableTuple* tuple) {
+    debugAllIndexes("PersistentTable::nextFreeTuple(start)");
     // First check whether we have any in our list
     // In the memcheck it uses the heap instead of a free list to help Valgrind.
     if (!m_blocksWithSpace.empty()) {
@@ -279,6 +280,7 @@ void PersistentTable::nextFreeTuple(TableTuple* tuple) {
             m_blocksWithSpace.erase(block);
         }
         assert (m_columnCount == tuple->columnCount());
+        debugAllIndexes("PersistentTable::nextFreeTuple(end1)");
         return;
     }
 
@@ -317,28 +319,31 @@ void PersistentTable::nextFreeTuple(TableTuple* tuple) {
     if (block->hasFreeTuples()) {
         m_blocksWithSpace.insert(block);
     }
+    debugAllIndexes("PersistentTable::nextFreeTuple(end2)");
 }
 
-void PersistentTable::debugAllIndexes() {
+void PersistentTable::debugAllIndexes(const std::string &label) {
+    debugAllIndexData("PersistentTable::debugAllIndexes");
     TableIterator ti(this, m_data.begin());
     TableTuple tuple(m_schema);
     while (ti.next(tuple)) {
         if (!tuple.m_data) {
-            std::cout << "Tuple with no data!!\n";
+            std::cout << "Label: "
+                      << label
+                      <<  ": Tuple with no data!!\n";
             PRINT_STACK_TRACE();
         } else {
-            debugAllIndexesOneTuple(tuple);
+            debugAllIndexesOneTuple(tuple, label);
         }
     }
 }
 
-void PersistentTable::debugAllIndexData() {
+void PersistentTable::debugAllIndexData(const std::string &label) {
     BOOST_FOREACH(auto index, m_indexes) {
-        index->debugAllData(index->getName());
+        index->debugAllData(index->getName(), label);
     }
 }
-void PersistentTable::debugAllIndexesOneTuple(const TableTuple &tuple) {
-    debugAllIndexData();
+void PersistentTable::debugAllIndexesOneTuple(const TableTuple &tuple, const std::string &label) {
     bool some_errors = false;
     std::string index_names = "";
     std::string sep = "";
@@ -374,6 +379,7 @@ void PersistentTable::debugAllIndexesOneTuple(const TableTuple &tuple) {
 }
 
 void PersistentTable::deleteAllTuples(bool, bool fallible) {
+    debugAllIndexData("PersistenTable::deleteAllTuples");
     // Instead of recording each tuple deletion, log it as a table truncation DR.
     ExecutorContext* ec = ExecutorContext::getExecutorContext();
     AbstractDRTupleStream* drStream = getDRTupleStream(ec);
@@ -889,7 +895,7 @@ void PersistentTable::insertPersistentTuple(TableTuple& source, bool fallible, b
         deleteTupleStorage(target); // also frees object columns
         throw;
     }
-    debugAllIndexesOneTuple(target);
+    debugAllIndexesOneTuple(target, "PersistentTable::insertPersistentTuple");
 }
 
 void PersistentTable::doInsertTupleCommon(TableTuple& source, TableTuple& target,
@@ -1310,6 +1316,7 @@ void PersistentTable::deleteTuple(TableTuple& target, bool fallible) {
     // Just like insert, we want to remove this tuple from all of our indexes
     assert(target.m_data);
     deleteFromAllIndexes(&target);
+    debugAllIndexData("PersistentTable::deleteTuple");
 
     if (createUndoAction) {
         target.setPendingDeleteOnUndoReleaseTrue();
@@ -1345,6 +1352,7 @@ void PersistentTable::deleteTuple(TableTuple& target, bool fallible) {
 
     // Here, for reasons of infallibility or no active UndoLog, there is no undo, there is only DO.
     deleteTupleFinalize(target);
+    debugAllIndexData("PersistentTable::deleteTuple");
 }
 
 
@@ -1397,6 +1405,7 @@ void PersistentTable::deleteTupleFinalize(TableTuple& target) {
 
     // No snapshot in progress cares, just whack it.
     deleteTupleStorage(target); // also frees object columns
+    debugAllIndexData("PersistentTable::deleteTupleFinalize");
 }
 
 /**
@@ -1408,6 +1417,7 @@ void PersistentTable::deleteTupleForSchemaChange(TableTuple& target) {
     TBPtr block = findBlock(target.address(), m_data, m_tableAllocationSize);
     // free object columns along with empty tuple block storage
     deleteTupleStorage(target, block, true);
+    debugAllIndexData("PersistentTable::deleteTupleForSchemChange");
 }
 
 /*

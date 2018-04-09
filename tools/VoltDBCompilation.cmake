@@ -134,19 +134,19 @@ MESSAGE("Using compiler ${CMAKE_CXX_COMPILER_ID}")
 IF (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   SET (VOLTDB_LINK_FLAGS ${VOLTDB_LINK_FLAGS} -pthread)
   SET (VOLTDB_IPC_LINK_FLAGS ${VOLTDB_LIB_LINK_FLAGS} -rdynamic)
-  VOLTDB_ADD_COMPILE_OPTIONS(-pthread -Wno-deprecated-declarations  -Wno-unknown-pragmas)
+  VOLTDB_ADD_COMPILE_OPTIONS(-pthread -Wno-deprecated-declarations -Wno-unknown-pragmas -Wno-deprecated)
   # It turns out to be easier to go from a higher version to a lower
   # version, since we can't easily test <= and >=.
   IF ( CMAKE_CXX_COMPILER_VERSION VERSION_GREATER VOLTDB_COMPILER_U17p10 )
     # COMPILER_VERSION > 7.2.0
     MESSAGE ("GCC Version ${CMAKE_CXX_COMPILER_VERSION} is not verified for building VoltDB.")
     MESSAGE ("We're using the options for 7.2.0, which is the newest one we've tried.  Good Luck.")
-    VOLTDB_ADD_COMPILE_OPTIONS(-Wno-unused-local-typedefs)
+    VOLTDB_ADD_COMPILE_OPTIONS(-Wno-unused-local-typedefs  -Wno-implicit-fallthrough)
     SET (CXX_VERSION_FLAG -std=c++11)
   ELSEIF ( CMAKE_CXX_COMPILER_VERSION VERSION_GREATER VOLTDB_COMPILER_U17p04 )
     # COMPILER_VERSION > 6.3.0
     MESSAGE("Using the Ubuntu 17.10 compiler settings for gcc ${CMAKE_CXX_COMPILER_VERSION}")
-    VOLTDB_ADD_COMPILE_OPTIONS(-Wno-unused-local-typedefs)
+    VOLTDB_ADD_COMPILE_OPTIONS(-Wno-unused-local-typedefs -Wno-implicit-fallthrough)
     SET (CXX_VERSION_FLAG -std=c++11)
   ELSEIF (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER VOLTDB_COMPILER_U16p10)
     # 6.2.0 < COMPILER_VERSION and COMPILER_VERSION <= 6.3.0
