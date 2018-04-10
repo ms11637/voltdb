@@ -153,12 +153,18 @@ public:
 
     T & operator*() const
     {
+        if (px == 0) {
+            // PRINT_STACK_TRACE();
+        }
         BOOST_ASSERT( px != 0 );
         return *px;
     }
 
     T * operator->() const
     {
+        if (px == 0) {
+            PRINT_STACK_TRACE();
+        }
         BOOST_ASSERT( px != 0 );
         return px;
     }

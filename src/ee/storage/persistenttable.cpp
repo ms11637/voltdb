@@ -242,7 +242,7 @@ PersistentTable::~PersistentTable() {
 // OPERATIONS
 // ------------------------------------------------------------------
 void PersistentTable::nextFreeTuple(TableTuple* tuple) {
-    debugAllIndexes("PersistentTable::nextFreeTuple(start)");
+    // debugAllIndexes("PersistentTable::nextFreeTuple(start)");
     // First check whether we have any in our list
     // In the memcheck it uses the heap instead of a free list to help Valgrind.
     if (!m_blocksWithSpace.empty()) {
@@ -280,7 +280,7 @@ void PersistentTable::nextFreeTuple(TableTuple* tuple) {
             m_blocksWithSpace.erase(block);
         }
         assert (m_columnCount == tuple->columnCount());
-        debugAllIndexes("PersistentTable::nextFreeTuple(end1)");
+        // debugAllIndexes("PersistentTable::nextFreeTuple(end1)");
         return;
     }
 
@@ -323,7 +323,6 @@ void PersistentTable::nextFreeTuple(TableTuple* tuple) {
 }
 
 void PersistentTable::debugAllIndexes(const std::string &label) {
-    debugAllIndexData("PersistentTable::debugAllIndexes");
     TableIterator ti(this, m_data.begin());
     TableTuple tuple(m_schema);
     while (ti.next(tuple)) {

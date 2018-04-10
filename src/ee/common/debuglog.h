@@ -239,7 +239,7 @@ private:
 };
 
 #define PRINT_LABELLED_STACK_TRACE(LABEL) do {\
-    outputLogHeader(__FILE__, __LINE__, __FUNCTION__, VOLT_LEVEL_ALL); \
+    voltdb::outputLogHeader(__FILE__, __LINE__, __FUNCTION__, VOLT_LEVEL_ALL); \
     if (strlen(LABEL) == 0) { \
         ::printf("STACK TRACE"); \
     } else {\

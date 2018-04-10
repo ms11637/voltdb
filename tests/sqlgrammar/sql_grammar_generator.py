@@ -854,12 +854,12 @@ def roll_file_name(filename, number_rolled_files):
                 os.rename(filename, new_name)
                 return
 
-def generate_sql_statements(sql_statement_type, 
-			    num_sql_statements=0, 
-			    number_rolled_files=None,
-			    max_save_statements=1000,
-                            delete_statement_type='truncate-statement', 
-			    delete_statement_number=10):
+def generate_sql_statements(sql_statement_type,
+                num_sql_statements=0,
+                number_rolled_files=None,
+                max_save_statements=1000,
+                            delete_statement_type='truncate-statement',
+                delete_statement_number=10):
     """Generate and print the specified number of SQL statements (num_sql_statements),
     of the specified type (sql_statement_type); the output file(s) should contain
     a maximum of the specified number of SQL statements (max_save_statements), meaning
@@ -1156,14 +1156,14 @@ if __name__ == "__main__":
     count_sql_statements = {}
     if options.initial_number:
         for sql_statement_type in options.initial_type.split(','):
-            generate_sql_statements(sql_statement_type, 
-				    int(options.initial_number),
-				    options.number_rolled_files)
+            generate_sql_statements(sql_statement_type,
+                    int(options.initial_number),
+                    options.number_rolled_files)
     for sql_statement_type in options.type.split(','):
-        generate_sql_statements(sql_statement_type, 
-				int(options.number), 
-				options.number_rolled_files,
-				int(options.max_save),
+        generate_sql_statements(sql_statement_type,
+                int(options.number),
+                options.number_rolled_files,
+                int(options.max_save),
                                 options.delete_type, options.delete_number)
 
     if debug > 5:

@@ -47,7 +47,7 @@
 #define HSTORETABLEITERATOR_H
 
 #include <cassert>
-
+#include <ostream>
 #include "common/LargeTempTableBlockCache.h"
 #include "common/LargeTempTableBlockId.hpp"
 #include "common/debuglog.h"
@@ -456,7 +456,23 @@ inline bool TableIterator::persistentNext(TableTuple &out) {
             // or at the end of a block.
             m_dataPtr = m_state.m_persBlockIterator.key();
 
-            uint32_t unusedTupleBoundary = m_state.m_persBlockIterator.data()->unusedTupleBoundary();
+            TBPtr ptr = m_state.m_persBlockIterator.data();
+            if (ptr == 0) {
+                std::ostringstream ostr;
+                ostr << "Null data in Persistent Block Iterator, table"
+                     << m_table->name()
+                     << ".\n";
+                if (m_dataPtr == NULL) {
+                    ostr << "  (m_dataPtr == null.)\n";
+                }
+
+                PRINT_LABELLED_STACK_TRACE(ostr.str().c_str());
+            }
+            uint32_t unusedTupleBoundary = ptr->unusedTupleBoundary();
+            if (ptr == NULL) {
+                std::cout << "  alive after unusedTupleBoundary.\n";
+            }
+
             m_dataEndPtr = m_dataPtr + (unusedTupleBoundary * m_tupleLength);
 
             m_state.m_persBlockIterator++;

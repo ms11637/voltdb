@@ -1,3 +1,21 @@
+drop index  IDX_R4_TV if exists;
+drop index  IDX_R4_VSI if exists;
+drop index  IDX_VR4_VB if exists;
+drop view   vr4  if exists;
+
+drop index  IDX_VR4_IDV if exists;
+drop index  IDX_VR4_VMB if exists;
+drop table  r4  if exists;
+
+DROP INDEX IDX_R21_TINY IF EXISTS;
+DROP INDEX IDX_R21_BIG  IF EXISTS;
+DROP INDEX IDX_R21_DEC  IF EXISTS;
+DROP INDEX IDX_R21_VIM  IF EXISTS;
+DROP INDEX IDX_R21_TIME IF EXISTS;
+DROP INDEX IDX_R21_VBIN IF EXISTS;
+DROP INDEX IDX_R21_POLY IF EXISTS;
+drop table  r21 if exists;
+
 CREATE TABLE R4 (
   ID      INTEGER  DEFAULT 0,
   TINY    TINYINT  DEFAULT 0,
