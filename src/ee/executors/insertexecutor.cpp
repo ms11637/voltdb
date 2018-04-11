@@ -221,7 +221,9 @@ bool InsertExecutor::p_execute_init_internal(const TupleSchema *inputSchema,
             !m_engine->isLocalSite(ValueFactory::getBigIntValue(0L))) {
         m_count_tuple.setNValue(0, ValueFactory::getBigIntValue(0L));
         // put the tuple into the output table
+        m_tmpOutputTable->debugAllIndexes("InsertExecutor::p_execute_init_internal (start)");
         m_tmpOutputTable->insertTuple(m_count_tuple);
+        m_tmpOutputTable->debugAllIndexes("InsertExecutor::p_execute_init_internal (end)");
         return false;
     }
     m_templateTuple = m_templateTupleStorage.tuple();
@@ -360,7 +362,9 @@ void InsertExecutor::p_execute_tuple_internal(TableTuple &tuple) {
         // use it when doing the insert below.
         m_targetTable = m_persistentTable;
     }
+    m_targetTable->debugAllIndexes("InsertExecutor::p_execute_tuple_internal (start)");
     m_targetTable->insertTuple(m_templateTuple);
+    m_targetTable->debugAllIndexes("InsertExecutor::p_execute_tuple_internal (end)");
     VOLT_DEBUG("Target table:\n%s\n", m_targetTable->debug().c_str());
     // successfully inserted
     ++m_modifiedTuples;
@@ -397,7 +401,9 @@ void InsertExecutor::p_execute_finish() {
     }
     m_count_tuple.setNValue(0, ValueFactory::getBigIntValue(m_modifiedTuples));
     // put the tuple into the output table
+    m_tmpOutputTable->debugAllIndexes("InsertExecutor::p_execute_finish (start)");
     m_tmpOutputTable->insertTuple(m_count_tuple);
+    m_tmpOutputTable->debugAllIndexes("InsertExecutor::p_execute_finish (end)");
 
     // add to the planfragments count of modified tuples
     m_engine->addToTuplesModified(m_modifiedTuples);

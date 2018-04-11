@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="bundles">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../bundles/log4jsocketimporter.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../bundles/kafkastream10.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../bundles/socketstream.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../bundles/voltcsvformatter.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../bundles/kinesisstream.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../bundles/kafkastream.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../bundles/pullsocketimporter.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

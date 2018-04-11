@@ -235,6 +235,10 @@ std::string Table::debug(const std::string &spacer) const {
     return ret;
 }
 
+void Table::debugAllIndexes(const std::string &label) {
+    ;
+}
+
 // ------------------------------------------------------------------
 // Serialization Methods
 // ------------------------------------------------------------------

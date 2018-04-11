@@ -174,6 +174,7 @@ bool DeleteExecutor::p_execute(const NValueArray &params) {
     TableTuple& count_tuple = m_node->getOutputTable()->tempTuple();
     count_tuple.setNValue(0, ValueFactory::getBigIntValue(modified_tuples));
     // try to put the tuple into the output table
+    m_node->getOutputTable()->debugAllIndexes("CommonTableExecutor::p_execute (start)");
     if (!m_node->getOutputTable()->insertTuple(count_tuple)) {
         VOLT_ERROR("Failed to insert tuple count (%ld) into"
                    " output table '%s'",
@@ -181,6 +182,7 @@ bool DeleteExecutor::p_execute(const NValueArray &params) {
                    m_node->getOutputTable()->name().c_str());
         return false;
     }
+    m_node->getOutputTable()->debugAllIndexes("CommonTableExecutor::p_execute (end)");
     m_engine->addToTuplesModified(modified_tuples);
 
     return true;

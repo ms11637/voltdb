@@ -188,6 +188,7 @@ class Table {
         return debug("");
     }
 
+    virtual void debugAllIndexes(const std::string &label);
     // Return a string containing info about this table
     // (each line prefixed by the given string)
     virtual std::string debug(const std::string &spacer) const;

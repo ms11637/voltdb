@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="jars1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../tests/testprocs/org/voltdb_testprocs/updateclasses/jars/addSQLStmtInvalid.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../tests/testprocs/org/voltdb_testprocs/updateclasses/jars/addSQLStmtNew.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../tests/testprocs/org/voltdb_testprocs/updateclasses/jars/addSQLStmt.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

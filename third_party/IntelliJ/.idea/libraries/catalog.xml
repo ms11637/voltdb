@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="catalog">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../tests/sqlgrammar/voltdbroot/config/catalog.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

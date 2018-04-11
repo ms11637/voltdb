@@ -60,10 +60,11 @@ std::string TableTuple::debug(const std::string& tableName,
     std::ostringstream buffer;
     buffer << ThreadLocalPool::siteIdString() << ": ";
     if (!m_data) {
-        buffer << "Tuple with no data.";
-        PRINT_STACK_TRACE();
+        buffer << "Tuple with no data.\n";
+        PRINT_LABELLED_STACK_TRACE(buffer.str());
     } else if (!m_schema) {
         buffer << "Tuple with no schema.";
+        PRINT_LABELLED_STACK_TRACE(buffer.str());
     } else {
         if (tableName.empty()) {
             buffer << "TableTuple(no table) ->";

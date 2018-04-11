@@ -258,9 +258,6 @@ bool CoveringCellIndex::deleteEntryDo(const TableTuple *tuple) {
     TupleMapIterator it = m_tupleEntries.find(setKeyFromTuple(tuple));
     if (it.isEnd()) {
         // This tuple was not in our map
-        std::cout << "CoveringCellIndex::deleteEntryDo: tuple data at end is "
-                  << (tuple->m_data ? "not " : "")
-                  << "null.\n";
         return false;
     }
 

@@ -339,7 +339,7 @@ void PersistentTable::debugAllIndexes(const std::string &label) {
 
 void PersistentTable::debugAllIndexData(const std::string &label) {
     BOOST_FOREACH(auto index, m_indexes) {
-        index->debugAllData(index->getName(), label);
+        index->debugAllData(label);
     }
 }
 void PersistentTable::debugAllIndexesOneTuple(const TableTuple &tuple, const std::string &label) {

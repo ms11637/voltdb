@@ -48,6 +48,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <sstream>
 #include "indexes/tableindex.h"
 #include "common/tabletuple.h"
 #include "structures/CompactingMap.h"
@@ -81,6 +82,7 @@ class CompactingTreeMultiMapIndex : public TableIndex
     void addEntryDo(const TableTuple *tuple, TableTuple *conflictTuple)
     {
         ++m_inserts;
+        assert(tuple->address());
         m_entries.insert(setKeyFromTuple(tuple), tuple->address());
     }
 
@@ -108,10 +110,15 @@ class CompactingTreeMultiMapIndex : public TableIndex
     bool replaceEntryNoKeyChangeDo(const TableTuple &destinationTuple, const TableTuple &originalTuple)
     {
         assert(originalTuple.address() != destinationTuple.address());
-        // The KeyType will always depend on tuple address, excpet for CompactingTreeMultiIndexTest.
+        // The KeyType will always depend on tuple address, except for CompactingTreeMultiIndexTest.
         if ( ! CompactingTreeMultiMapIndex::deleteEntry(&originalTuple)) {
             return false;
         }
+        std::ostringstream buffer;
+        buffer << "Adding no key change replacement to index named "
+               << getName()
+               << "\n";
+        PRINT_LABELLED_STACK_TRACE(buffer.str());
         CompactingTreeMultiMapIndex::addEntry(&destinationTuple, NULL);
         return true;
     }
@@ -434,11 +441,9 @@ public:
         m_cmp(keySchema)
     {}
 
-    void debugAllData(const std::string &index_name, std::string label) const {
-        std::cout << "Label: "
-                  << label
-                  << ": CompactingTreeMultiMapIndex::debugAllData("
-                  << index_name
+    void debugAllData(const std::string &label) const {
+        std::cout << "CompactingTreeMultiMapIndex::debugAllData("
+                  << getName()
                   << ") start with "
                   << getSize()
                   << " entries."
@@ -449,17 +454,17 @@ public:
             retval.move(const_cast<void*>(iter.value()));
             if (retval.m_data == NULL) {
                 std::cout << "Empty tuple in index "
-                          << index_name
+                          << getName()
                           << " at position "
                           << pos << "."
                           << std::endl;
-                PRINT_LABELLED_STACK_TRACE(label.c_str());
+                PRINT_LABELLED_STACK_TRACE(label);
             }
             iter.moveNext();
             pos += 1;
         }
         std::cout << "CompactingTreeMultiMapIndex::debugAllData("
-                  << index_name
+                  << getName()
                   << ", "
                   << label
                   << ") end.\n";

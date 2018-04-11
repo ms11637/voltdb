@@ -41,7 +41,9 @@ bool CommonTableExecutor::p_execute(const NValueArray& params) {
     TableTuple iterTuple(inputTable->schema());
     TableIterator iter = inputTable->iterator();
     while (iter.next(iterTuple)) {
+        finalOutputTable->debugAllIndexes("CommonTableExecutor::p_execute (start)");
         finalOutputTable->insertTuple(iterTuple);
+        finalOutputTable->debugAllIndexes("CommonTableExecutor::p_execute (end)");
     }
 
     int recursiveStmtId = node->getRecursiveStmtId();
@@ -74,7 +76,9 @@ bool CommonTableExecutor::p_execute(const NValueArray& params) {
         // Add the recursive output to the final result
         iter = recursiveOutputTable->iterator();
         while (iter.next(iterTuple)) {
+            finalOutputTable->debugAllIndexes("CommonTableExecutor::p_execute (start)");
             finalOutputTable->insertTuple(iterTuple);
+            finalOutputTable->debugAllIndexes("CommonTableExecutor::p_execute (end)");
         }
 
         // Now prepare for the next iteration...

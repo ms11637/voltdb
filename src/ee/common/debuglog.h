@@ -239,11 +239,12 @@ private:
 };
 
 #define PRINT_LABELLED_STACK_TRACE(LABEL) do {\
+    std::string __label{LABEL}; \
     voltdb::outputLogHeader(__FILE__, __LINE__, __FUNCTION__, VOLT_LEVEL_ALL); \
-    if (strlen(LABEL) == 0) { \
+    if (__label.size() == 0) { \
         ::printf("STACK TRACE"); \
     } else {\
-        ::printf("STACK TRACE(%s)", LABEL); \
+        ::printf("STACK TRACE(%s)", __label.c_str()); \
     } \
     voltdb::StackTrace::printStackTrace(); \
     ::fflush(stdout); \
