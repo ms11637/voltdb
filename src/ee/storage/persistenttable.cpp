@@ -320,6 +320,7 @@ void PersistentTable::nextFreeTuple(TableTuple* tuple) {
 }
 
 void PersistentTable::debugAllIndexes(const std::string &label) {
+    debugAllIndexData(label);
     TableIterator ti(this, m_data.begin());
     TableTuple tuple(m_schema);
     while (ti.next(tuple)) {
@@ -376,7 +377,7 @@ void PersistentTable::debugAllIndexesOneTuple(const TableTuple &tuple, const std
 }
 
 void PersistentTable::deleteAllTuples(bool, bool fallible) {
-    debugAllIndexData("PersistenTable::deleteAllTuples");
+    debugAllIndexData("PersistentTable::deleteAllTuples");
     // Instead of recording each tuple deletion, log it as a table truncation DR.
     ExecutorContext* ec = ExecutorContext::getExecutorContext();
     AbstractDRTupleStream* drStream = getDRTupleStream(ec);

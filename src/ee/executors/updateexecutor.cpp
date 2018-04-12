@@ -249,7 +249,9 @@ bool UpdateExecutor::p_execute(const NValueArray &params) {
     TableTuple& count_tuple = m_node->getOutputTable()->tempTuple();
     count_tuple.setNValue(0, ValueFactory::getBigIntValue(modified_tuples));
     // try to put the tuple into the output table
+    m_node->getOutputTable()->debugAllIndexes("UpdateExecutor::p_execute (start)");
     m_node->getOutputTable()->insertTuple(count_tuple);
+    m_node->getOutputTable()->debugAllIndexes("UpdateExecutor::p_execute (end)");
 
     VOLT_TRACE("TARGET TABLE - AFTER: %s\n", targetTable->debug("").c_str());
     // TODO lets output result table here, not in result executor. same thing in

@@ -466,7 +466,7 @@ inline bool TableIterator::persistentNext(TableTuple &out) {
                     ostr << "  (m_dataPtr == null.)\n";
                 }
 
-                PRINT_LABELLED_STACK_TRACE(ostr.str().c_str());
+                PRINT_LABELLED_STACK_TRACE(ostr.str());
             }
             uint32_t unusedTupleBoundary = ptr->unusedTupleBoundary();
             if (ptr == NULL) {

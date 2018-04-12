@@ -48,6 +48,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <sstream>
 #include "indexes/tableindex.h"
 #include "common/tabletuple.h"
 #include "structures/CompactingMap.h"
@@ -81,6 +82,7 @@ class CompactingTreeMultiMapIndex : public TableIndex
     void addEntryDo(const TableTuple *tuple, TableTuple *conflictTuple)
     {
         ++m_inserts;
+        assert(tuple->address());
         m_entries.insert(setKeyFromTuple(tuple), tuple->address());
     }
 
@@ -112,6 +114,11 @@ class CompactingTreeMultiMapIndex : public TableIndex
         if ( ! CompactingTreeMultiMapIndex::deleteEntry(&originalTuple)) {
             return false;
         }
+        std::ostringstream buffer;
+        buffer << "Adding no key change replacement to index named "
+               << getName()
+               << "\n";
+        PRINT_LABELLED_STACK_TRACE(buffer.str());
         CompactingTreeMultiMapIndex::addEntry(&destinationTuple, NULL);
         return true;
     }
@@ -473,15 +480,16 @@ public:
                           << " at position "
                           << pos << "."
                           << std::endl;
+                PRINT_LABELLED_STACK_TRACE(label);
             }
             iter.moveNext();
             pos += 1;
         }
-        std::cout << "CompactingTreeMultiMapIndex::debugAllData["
+        std::cout << "CompactingTreeMultiMapIndex::debugAllData("
                   << getName()
                   << ", "
                   << label
-                  << "] end.\n";
+                  << ") end.\n";
     }
 };
 

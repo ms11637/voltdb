@@ -196,7 +196,13 @@ public:
     ~CompactingMap();
 
     // TODO: remove this. But two eecheck depend on this.
-    bool insert(std::pair<Key, Data> value) { return (insert(value.first, value.second) == NULL); };
+    bool insert(std::pair<Key, Data> value) {
+        if ( ! value.second ) {
+            PRINT_LABELLED_STACK_TRACE("Empty data value in CompactingMap::insert");
+        }
+        assert(value.second);
+        return (insert(value.first, value.second) == NULL);
+    };
     // A syntactically convenient analog to CompactingHashTable's insert function
     const Data *insert(const Key &key, const Data &data);
     bool erase(const Key &key);
@@ -355,6 +361,7 @@ CompactingMap<KeyValuePair, Compare, hasRank>::insert(const Key &key, const Data
 
         // create a new node using the custom operator new
         TreeNode *z = new (m_allocator) TreeNode(&NIL, y);
+
         z->kv.setKeyValuePair(key, value);
 
         // stitch it in

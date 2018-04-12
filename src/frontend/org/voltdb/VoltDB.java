@@ -129,7 +129,9 @@ public class VoltDB {
         /** select normal JNI backend.
          *  IPC, Valgrind, HSQLDB, and PostgreSQL are the other options.
          */
-        public BackendTarget m_backend = BackendTarget.NATIVE_EE_JNI;
+        public BackendTarget m_backend = (Boolean.parseBoolean(System.getProperty("org.voltdb.ipcbackend", "false"))
+                                             ? BackendTarget.NATIVE_EE_IPC
+                                             : BackendTarget.NATIVE_EE_JNI);
 
         /** leader hostname */
         public String m_leader = null;

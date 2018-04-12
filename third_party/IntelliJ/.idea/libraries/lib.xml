@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/jcip-annotations.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/commons-lang-2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/jsr305.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/asm-debug-all-5.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/ant.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/bcel-6.0-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/jaxen-1.1.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/findbugs-ant.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/yjp-controller-api-redist.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/annotations.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/jFormatString.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/jdepend-2.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/findbugs.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../java/jars/findbugs-3.0.1/lib/dom4j-1.6.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

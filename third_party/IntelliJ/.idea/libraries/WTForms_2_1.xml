@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="WTForms-2.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../python/packages/WTForms-2.1.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

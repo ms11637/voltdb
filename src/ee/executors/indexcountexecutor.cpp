@@ -250,7 +250,9 @@ bool IndexCountExecutor::p_execute(const NValueArray &params)
         VOLT_TRACE("Search key after substitutions: '%s'", searchKey.debugNoHeader().c_str());
 
         if (earlyReturnForSearchKeyOutOfRange) {
+            m_outputTable->debugAllIndexes("IndexCountExecutor::p_execute (start)");
             m_outputTable->insertTuple(tmptup);
+            m_outputTable->debugAllIndexes("IndexCountExecutor::p_execute (end)");
             return true;
         }
     }
@@ -328,7 +330,9 @@ bool IndexCountExecutor::p_execute(const NValueArray &params)
         VOLT_TRACE("End key after substitutions: '%s'", endKey.debugNoHeader().c_str());
 
         if (earlyReturnForSearchKeyOutOfRange) {
+            m_outputTable->debugAllIndexes("IndexCountExecutor::p_execute (start)");
             m_outputTable->insertTuple(tmptup);
+            m_outputTable->debugAllIndexes("IndexCountExecutor::p_execute (end)");
             return true;
         }
     }
@@ -428,7 +432,9 @@ bool IndexCountExecutor::p_execute(const NValueArray &params)
     VOLT_DEBUG("Index Count ANSWER %ld = %ld - %ld - 1 + %d + %d\n",
             (long)rkRes, (long)rkEnd, (long)rkStart, leftIncluded, rightIncluded);
     tmptup.setNValue(0, ValueFactory::getBigIntValue( rkRes ));
+    m_outputTable->debugAllIndexes("IndexCountExecutor::p_execute (start)");
     m_outputTable->insertTuple(tmptup);
+    m_outputTable->debugAllIndexes("IndexCountExecutor::p_execute (end)");
 
     VOLT_DEBUG ("Index Count :\n %s", m_outputTable->debug().c_str());
     return true;

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="upgradeCatalogV7_4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../tests/frontend/org/voltdb/regressionsuites/upgradeCatalogV7_4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
