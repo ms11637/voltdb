@@ -434,12 +434,32 @@ public:
         m_cmp(keySchema)
     {}
 
-    void debugAllData(const std::string &index_name, std::string label) const {
+    void printToBuffer(std::ostream &buffer) const {
+        int pos = 0;
+        for (auto iter = m_entries.begin(); !iter.isEnd();) {
+            TableTuple retval(getTupleSchema());
+            retval.move(const_cast<void*>(iter.value()));
+            if (retval.m_data == NULL) {
+                buffer << "Empty tuple in index "
+                       << getName()
+                       << " at position "
+                       << pos
+                       << "."
+                       << std::endl;
+            } else {
+                buffer << retval.debug() << std::endl;
+            }
+            iter.moveNext();
+            pos += 1;
+
+        }
+    }
+    void debugAllData(const std::string &label) const {
         std::cout << "Label: "
                   << label
-                  << ": CompactingTreeMultiMapIndex::debugAllData("
-                  << index_name
-                  << ") start with "
+                  << ": CompactingTreeMultiMapIndex::debugAllData["
+                  << getName()
+                  << "] start with "
                   << getSize()
                   << " entries."
                   << std::endl;
@@ -449,20 +469,19 @@ public:
             retval.move(const_cast<void*>(iter.value()));
             if (retval.m_data == NULL) {
                 std::cout << "Empty tuple in index "
-                          << index_name
+                          << getName()
                           << " at position "
                           << pos << "."
                           << std::endl;
-                PRINT_LABELLED_STACK_TRACE(label.c_str());
             }
             iter.moveNext();
             pos += 1;
         }
-        std::cout << "CompactingTreeMultiMapIndex::debugAllData("
-                  << index_name
+        std::cout << "CompactingTreeMultiMapIndex::debugAllData["
+                  << getName()
                   << ", "
                   << label
-                  << ") end.\n";
+                  << "] end.\n";
     }
 };
 

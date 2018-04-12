@@ -48,6 +48,7 @@
 
 #include <vector>
 #include <string>
+#include <ostream>
 #include "boost/shared_ptr.hpp"
 #include "boost/tuple/tuple.hpp"
 #include "common/ids.h"
@@ -262,7 +263,7 @@ public:
     /**
      * Check that all data is well defined.
      */
-    virtual void debugAllData(const std::string &index_name, std::string label) const;
+    virtual void debugAllData(const std::string &label) const;
 
     /**
      * This method moves to the first tuple equal to given key.  To
@@ -546,7 +547,7 @@ public:
 
     virtual std::string debug() const;
     virtual std::string getTypeName() const = 0;
-
+    void printToBuffer(std::ostream &buffer) const;
     virtual void ensureCapacity(uint32_t capacity) {}
 
     // print out info about lookup usage

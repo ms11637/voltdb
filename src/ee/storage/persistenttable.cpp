@@ -242,7 +242,6 @@ PersistentTable::~PersistentTable() {
 // OPERATIONS
 // ------------------------------------------------------------------
 void PersistentTable::nextFreeTuple(TableTuple* tuple) {
-    // debugAllIndexes("PersistentTable::nextFreeTuple(start)");
     // First check whether we have any in our list
     // In the memcheck it uses the heap instead of a free list to help Valgrind.
     if (!m_blocksWithSpace.empty()) {
@@ -280,7 +279,6 @@ void PersistentTable::nextFreeTuple(TableTuple* tuple) {
             m_blocksWithSpace.erase(block);
         }
         assert (m_columnCount == tuple->columnCount());
-        // debugAllIndexes("PersistentTable::nextFreeTuple(end1)");
         return;
     }
 
@@ -319,7 +317,6 @@ void PersistentTable::nextFreeTuple(TableTuple* tuple) {
     if (block->hasFreeTuples()) {
         m_blocksWithSpace.insert(block);
     }
-    debugAllIndexes("PersistentTable::nextFreeTuple(end2)");
 }
 
 void PersistentTable::debugAllIndexes(const std::string &label) {
@@ -339,9 +336,10 @@ void PersistentTable::debugAllIndexes(const std::string &label) {
 
 void PersistentTable::debugAllIndexData(const std::string &label) {
     BOOST_FOREACH(auto index, m_indexes) {
-        index->debugAllData(index->getName(), label);
+        index->debugAllData(label);
     }
 }
+
 void PersistentTable::debugAllIndexesOneTuple(const TableTuple &tuple, const std::string &label) {
     bool some_errors = false;
     std::string index_names = "";
@@ -894,7 +892,7 @@ void PersistentTable::insertPersistentTuple(TableTuple& source, bool fallible, b
         deleteTupleStorage(target); // also frees object columns
         throw;
     }
-    debugAllIndexesOneTuple(target, "PersistentTable::insertPersistentTuple");
+    debugAllIndexesOneTuple(target, "PersistentTable::insertPersistentTuple(end)");
 }
 
 void PersistentTable::doInsertTupleCommon(TableTuple& source, TableTuple& target,
@@ -1221,6 +1219,7 @@ void PersistentTable::updateTupleWithSpecificIndexes(TableTuple& targetTupleToUp
     BOOST_FOREACH (auto view, m_views) {
         view->processTupleInsert(targetTupleToUpdate, fallible);
     }
+    debugAllIndexesOneTuple(targetTupleToUpdate, "PersistentTable::updateTupleWithSpecificIndexes");
 }
 
 /*
@@ -1233,6 +1232,7 @@ void PersistentTable::updateTupleWithSpecificIndexes(TableTuple& targetTupleToUp
 void PersistentTable::updateTupleForUndo(char* tupleWithUnwantedValues,
                                          char* sourceTupleDataWithNewValues,
                                          bool revertIndexes) {
+    debugAllIndexes("PersistentTable::updateTupleForUndo(start)");
     TableTuple matchable(m_schema);
     // Get the address of the tuple in the table from one of the copies on hand.
     // Any TableScan OR a primary key lookup on an already updated index will find the tuple
@@ -1283,9 +1283,11 @@ void PersistentTable::updateTupleForUndo(char* tupleWithUnwantedValues,
             }
         }
     }
+    debugAllIndexes("PersistentTable::updateTupleForUndo(end)");
 }
 
 void PersistentTable::deleteTuple(TableTuple& target, bool fallible) {
+    debugAllIndexesOneTuple(target, "PersistentTable::deleteTuple(start)");
     UndoQuantum* uq = ExecutorContext::currentUndoQuantum();
     bool createUndoAction = fallible && (uq != NULL);
 
@@ -1314,6 +1316,7 @@ void PersistentTable::deleteTuple(TableTuple& target, bool fallible) {
 
     // Just like insert, we want to remove this tuple from all of our indexes
     assert(target.m_data);
+    debugAllIndexesOneTuple(target, "PersistentTable::deleteTuple(start)");
     deleteFromAllIndexes(&target);
     debugAllIndexData("PersistentTable::deleteTuple");
 

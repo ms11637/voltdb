@@ -92,7 +92,7 @@ public abstract class BuildDirectoryUtils {
         }
         streamOut.println(content);
         streamOut.close();
-    }
+        }
 
     public static String getBuildDirectoryPath() {
         String envPath = System.getenv("TEST_DIR");

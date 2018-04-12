@@ -140,9 +140,13 @@ std::string TableIndex::debug() const
     {
         buffer << " -> Predicate[" << getPredicate()->debug() << "]";
     }
-
+    printToBuffer(buffer);
     std::string ret(buffer.str());
     return (ret);
+}
+
+void TableIndex::printToBuffer(std::ostream &buffer) const {
+    ;
 }
 
 IndexStats* TableIndex::getIndexStats() {
@@ -241,7 +245,7 @@ bool TableIndex::existsOrFiltered(const TableTuple *persistentTuple) const
 /**
  * Don't do anything here.  We are only interested in CompactingTreeMultiMapIndex.
  */
-void TableIndex::debugAllData(const std::string &index_name, std::string) const {
+void TableIndex::debugAllData(const std::string &label) const {
 }
 
 
