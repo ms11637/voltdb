@@ -184,6 +184,7 @@ public class SnapshotSiteProcessor {
 
     private final Random m_random = new Random();
 
+    private final long m_siteId;
     /*
      * Interface that will be checked when scheduling snapshot work in IV2.
      * Reports whether the site is "idle" for whatever definition that may be.
@@ -245,19 +246,11 @@ public class SnapshotSiteProcessor {
 
     private long m_quietUntil = 0;
 
-    public SnapshotSiteProcessor(SiteTaskerQueue siteQueue, int snapshotPriority) {
-        this(siteQueue, snapshotPriority, new IdlePredicate() {
-            @Override
-            public boolean idle(long now) {
-                throw new UnsupportedOperationException();
-            }
-        });
-    }
-
-    public SnapshotSiteProcessor(SiteTaskerQueue siteQueue, int snapshotPriority, IdlePredicate idlePredicate) {
+    public SnapshotSiteProcessor(SiteTaskerQueue siteQueue, int snapshotPriority, IdlePredicate idlePredicate, long hsid) {
         m_siteTaskerQueue = siteQueue;
         m_snapshotPriority = snapshotPriority;
         m_idlePredicate = idlePredicate;
+        m_siteId = hsid;
     }
 
     public void shutdown() throws InterruptedException {
@@ -626,7 +619,7 @@ public class SnapshotSiteProcessor {
                 // removed from the containing map, so don't use the collection after removal!
                 taskIter.remove();
                 SNAP_LOG.debug("Finished snapshot tasks for table " + tableId +
-                               ": " + tableTasks);
+                               ": " + tableTasks + " on site:" + CoreUtils.hsIdToString(m_siteId));
             } else {
                 break;
             }
@@ -736,7 +729,7 @@ public class SnapshotSiteProcessor {
 
                             logSnapshotCompleteToZK(txnId,
                                                     snapshotSucceeded,
-                                                    snapshotDataForZookeeper);
+                                                    snapshotDataForZookeeper, m_siteId);
                         }
                     }
                 };
@@ -760,16 +753,18 @@ public class SnapshotSiteProcessor {
     private static void logSnapshotCompleteToZK(
             long txnId,
             boolean snapshotSuccess,
-            ExtensibleSnapshotDigestData extraSnapshotData) {
+            ExtensibleSnapshotDigestData extraSnapshotData, long hsid) {
         ZooKeeper zk = VoltDB.instance().getHostMessenger().getZK();
 
         // Timeout after 10 minutes
         final long endTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(10);
         final String snapshotPath = VoltZK.completed_snapshots + "/" + txnId;
         boolean success = false;
+        String currentStatus = "";
         while (!success) {
             if (System.currentTimeMillis() > endTime) {
-                VoltDB.crashLocalVoltDB("Timed out logging snapshot completion to ZK");
+                VoltDB.crashLocalVoltDB("Timed out logging snapshot completion to ZK on site "
+                        + CoreUtils.hsIdToString(hsid) + " status:" + currentStatus);
             }
 
             Stat stat = new Stat();
@@ -801,7 +796,8 @@ public class SnapshotSiteProcessor {
                     jsonObj.put("isTruncation", false);
                 }
                 extraSnapshotData.mergeToZooKeeper(jsonObj, SNAP_LOG);
-                byte[] zkData = jsonObj.toString().getBytes("UTF-8");
+                currentStatus = jsonObj.toString();
+                byte[] zkData = currentStatus.getBytes("UTF-8");
                 if (zkData.length > 5000000) {
                     SNAP_LOG.warn("ZooKeeper node for snapshot digest unexpectedly large: " + zkData.length);
                 }
