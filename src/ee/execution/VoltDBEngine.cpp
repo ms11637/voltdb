@@ -1568,7 +1568,7 @@ VoltDBEngine::loadTable(int32_t tableId,
     try {
         // If the table we are loading is a replicated table, we need to use a count-down latch
         // (embedded in the ConditionalSynchronizedExecuteWithMpMemory structure) to ensure that only the
-        // lowest site get to execute the real table loading function.
+        // lowest site gets to execute the real table loading function.
         // This ConditionalSynchronizedExecuteWithMpMemory takes no effect in the partitioned table case.
         ConditionalSynchronizedExecuteWithMpMemory possiblySynchronizedUseMpMemory(
                 table->isCatalogTableReplicated(), isLowestSite(), s_loadTableResult);

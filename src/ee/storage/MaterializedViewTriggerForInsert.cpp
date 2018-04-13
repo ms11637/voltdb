@@ -102,7 +102,7 @@ void MaterializedViewTriggerForInsert::setEnabled(bool enabled) {
     }
     else if (m_enabled && m_dest->deltaTable()) {
         // When we turn on the maintenance, if a delta table exists, it means that the view table was
-        // not empty when at the time when we paused it.
+        // not empty at the time when we paused it.
         // In this case, we need to do a merge. Log a message for it.
         char msg[256];
         snprintf(msg, sizeof(msg), "Merging the pre-existing content in view %s with the snapshot data.",
@@ -115,11 +115,7 @@ void MaterializedViewTriggerForInsert::setEnabled(bool enabled) {
         while (ti.next(deltaTuple)) {
             // Notice that here we are passing view table tuples, not source table tuples like we do
             // in processTupleInsert() and processTupleDelete().
-            // To differentiate that, there is an optional boolean flag in
-            // MaterializedViewTriggerForInsert::findExistingTuple() indicating whether the tuple
-            // we are passing is source table tuple.
-            // Although MaterializedViewHandler also has a findExistingTuple() function,
-            // it does not have this optional flag because we only pass view table tuples there.
+            // To differentiate that, we use findExistingTupleUsingDelta() instead of findExistingTuple().
             bool found = findExistingTupleUsingDelta(deltaTuple);
             if (found) {
                 mergeTupleForInsert(deltaTuple);
@@ -335,7 +331,7 @@ void MaterializedViewTriggerForInsert::processTupleInsert(const TableTuple &newT
 }
 
 void MaterializedViewTriggerForInsert::setDestTable(PersistentTable * dest) {
-    PersistentTable * oldDest = m_dest;
+    PersistentTable* oldDest = m_dest;
     m_dest = dest;
     dest->incrementRefcount();
     dest->setMaterializedViewTrigger(this);
@@ -527,19 +523,17 @@ bool MaterializedViewTriggerForInsert::findExistingTuple(const TableTuple &tuple
         return true;
     }
 
-    IndexCursor indexCursor(m_index->getTupleSchema());
-    // If the tuple passed in is a source table tuple, we need to assemble a desired
-    // view table tuple (only includes the index key columns) based on the information we stored in this trigger.
-
-    // find the key for this tuple (which is the group by columns)
+    // Assemble a desired view table tuple (only includes the index key columns)
+    // based on the information we stored in this trigger.
     for (int colindex = 0; colindex < m_groupByColumnCount; colindex++) {
         NValue value = getGroupByValueFromSrcTuple(colindex, tuple);
         m_searchKeyValue[colindex] = value;
         m_searchKeyTuple.setNValue(colindex, value);
     }
+
+    IndexCursor indexCursor(m_index->getTupleSchema());
     // determine if the row exists (create the empty one if it doesn't)
     m_index->moveToKey(&m_searchKeyTuple, indexCursor);
-
     m_existingTuple = m_index->nextValueAtKey(indexCursor);
     return ! m_existingTuple.isNullTuple();
 }

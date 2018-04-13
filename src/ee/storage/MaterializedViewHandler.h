@@ -113,7 +113,7 @@ private:
     int m_aggColumnCount;
     std::vector<ExpressionType> m_aggTypes;
     bool m_dirty;
-    // Indicates whether the view can included in a snapshot.
+    // Indicates whether the view can be included in a snapshot.
     // If a view is partitioned but there is not an explicit partition column,
     // then it cannot be included in a snapshot.
     bool m_supportSnapshot;

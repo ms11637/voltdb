@@ -268,11 +268,11 @@ public class RejoinProducer extends JoinProducerBase {
     public void runForRejoin(SiteProcedureConnection siteConnection,
             TaskLog m_taskLog) throws IOException
     {
-        // After doInitialization(), the rejoin producer is inserted to the task queue,
-        // and then we come to here repeatedly until the stream snapshot restore finishes.
-        // The first time when this producer method is run, we need to figure out
-        // which views to pause so that they are handled properly before the snapshot
-        // streams arrive.
+        // After doInitialization(), the rejoin producer is inserted into the task queue,
+        // and then we come here repeatedly until the stream snapshot restore finishes.
+        // The first time when this producer method is run (m_commaSeparatedNameOfViewsToPause is null),
+        // we need to figure out which views to pause so that they are handled properly
+        // before the snapshot streams arrive.
         if (m_commaSeparatedNameOfViewsToPause == null) {
             // The very first execution of runForRejoin will lead us here.
             StringBuilder commaSeparatedViewNames = new StringBuilder();

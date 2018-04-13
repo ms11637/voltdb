@@ -717,6 +717,7 @@ public class SnapshotRestore extends VoltSystemProcedure {
                                     VoltSystemProcedure.hashToFragId(ftm.getPlanHash(0)),
                                     ftm.getParameterSetForFragment(0));
                     if (dp != null) {
+                        // Like SysProcFragmentId.PF_setViewEnabled, the execution returns null.
                         FragmentResponseMessage frm = new FragmentResponseMessage(ftm, m.getHSId());
                         frm.addDependency(dp);
                         m.send(ftm.getCoordinatorHSId(), frm);
@@ -1072,8 +1073,8 @@ public class SnapshotRestore extends VoltSystemProcedure {
         else if (fragmentId == SysProcFragmentId.PF_setViewEnabled) {
             Object[] paramArray = params.toArray();
             assert(paramArray[0] != null && paramArray[1] != null);
-            String commaSeparatedViewNames = (String)paramArray[0];
-            boolean enabled = (int)paramArray[1] > 0 ? true : false;
+            boolean enabled = (int)paramArray[0] > 0 ? true : false;
+            String commaSeparatedViewNames = (String)paramArray[1];
             m_runner.getExecutionEngine().setViewsEnabled(commaSeparatedViewNames, enabled);
             // Can an error from here stop the snapshot? I don't think so.
             // So I intentionally let this fragment return nothing.
@@ -2089,7 +2090,7 @@ public class SnapshotRestore extends VoltSystemProcedure {
                         false,        // isReadOnly
                         fragIdToHash(SysProcFragmentId.PF_setViewEnabled), //planHash
                         DEP_setViewEnabled,
-                        ParameterSet.fromArrayNoCopy(commaSeparatedViewNames, enabledAsInt),
+                        ParameterSet.fromArrayNoCopy(enabledAsInt, commaSeparatedViewNames),
                         false,        // isFinal
                         m_runner.getTxnState().isForReplay());
     }
